@@ -6,19 +6,21 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-
+    
     public float enemyVelocity;
-    public GameObject windLocal;
+    public GameObject windOn;
+    private Player windControll;
     public GameObject enemySpot;
-    public bool onCamera = true;
-    public bool stickOn = true;
+    public bool onCamera = false;
+    public bool stickOn = false;
+    public bool moveToSpot = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        onCamera = false;
-        stickOn = false;
-        windLocal = GameObject.Find("sugador");
+        windControll = GetComponent<Player>();
+        windOn = GameObject.Find("sugador");
+        
     }
 
     // Update is called once per frame
@@ -29,30 +31,25 @@ public class Enemy : MonoBehaviour
 
     public void GhostSuck()
     {
-
-        if (enemySpot.gameObject.activeSelf == true)
+        
+        if (moveToSpot)
         {
             transform.position = Vector2.MoveTowards(transform.position, enemySpot.transform.position, enemyVelocity * Time.deltaTime);
         }
-        if (windLocal.gameObject.activeSelf == true && onCamera == true)
+        if (onCamera && windOn != null && windOn.gameObject.activeSelf == true)
         {
             stickOn = true;
+            if (stickOn)
+            {
+                moveToSpot = false;
+                transform.position = Vector2.MoveTowards(transform.position, windOn.transform.position, enemyVelocity * Time.deltaTime);
+            }
+            else
+            {
+                stickOn = false;
+                moveToSpot = true;
+            }
         }
-        if (stickOn)
-        {
-            enemySpot.gameObject.SetActive(false);
-            transform.position = Vector2.MoveTowards(transform.position, windLocal.transform.position, enemyVelocity * Time.deltaTime);
-        }
-        else
-        {
-            enemySpot.gameObject.SetActive(true);
-            transform.position = Vector2.MoveTowards(transform.position, enemySpot.transform.position, enemyVelocity * Time.deltaTime);
-        }
-        if(windLocal.gameObject.activeSelf == false)
-        {
-            stickOn = false;
-        }
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

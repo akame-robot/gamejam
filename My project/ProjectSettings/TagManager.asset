@@ -9,6 +9,8 @@ TagManager:
   - Enemy
   - Wind
   - OnCamera
+  - spot1
+  - obstacle
   layers:
   - Default
   - TransparentFX
